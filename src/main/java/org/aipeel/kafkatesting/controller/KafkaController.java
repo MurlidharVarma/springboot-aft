@@ -2,6 +2,7 @@ package org.aipeel.kafkatesting.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aipeel.kafkatesting.model.Product;
+import org.aipeel.kafkatesting.service.KafkaService;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class KafkaController {
 
     @Autowired
-    KafkaTemplate<String, String> kafkaTemplate;
+    KafkaTemplate kafkaTemplate;
 
     @Value("${kafka.topic.order}")
     String orderTopic;

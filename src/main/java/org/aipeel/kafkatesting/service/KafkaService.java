@@ -19,7 +19,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 public class KafkaService {
 
     @Autowired
-    KafkaTemplate<String, String> kafkaTemplate;
+    KafkaTemplate kafkaTemplate;
 
     @Value("${kafka.topic.order}")
     String orderTopic;

@@ -3,3 +3,9 @@ kafka:
   topic:
     order: order
     payment: payment
+
+debug: true
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
