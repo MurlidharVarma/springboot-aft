@@ -1,0 +1,5 @@
+kafka:
+  bootstrap-server: "127.0.0.1:9092"
+  topic:
+    order: order
+    payment: payment
