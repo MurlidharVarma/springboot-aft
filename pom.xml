@@ -45,6 +45,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.jupiter</groupId>
+					<artifactId>junit-jupiter-engine</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
@@ -56,6 +62,20 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+<!--		Junit5-Start-->
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+<!--		Junit5-End-->
 
 <!--		Wiremock-START-->
 		<dependency>
@@ -71,15 +91,15 @@
 			<artifactId>cucumber-java</artifactId>
 			<version>7.3.3</version>
 		</dependency>
+
 		<dependency>
 			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-junit</artifactId>
+			<artifactId>cucumber-junit-platform-engine</artifactId>
 			<version>7.3.3</version>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<testSourceDirectory>src/test/unit/java</testSourceDirectory>
 		<testResources>
 			<testResource>
 				<directory>${basedir}/src/test/unit/resources</directory>
@@ -103,72 +123,48 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>add-test-source</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/test/aft/java</source>
+								<source>src/test/unit/java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.2</version>
 			</plugin>
 
-
-
-<!--			<plugin>-->
-<!--				<groupId>org.codehaus.mojo</groupId>-->
-<!--				<artifactId>build-helper-maven-plugin</artifactId>-->
-<!--				<version>3.3.0</version>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>add-test-source</id>-->
-<!--						<phase>generate-test-sources</phase>-->
-<!--						<goals>-->
-<!--							<goal>add-test-source</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<sources>-->
-<!--								<source>src/aft/java/**</source>-->
-<!--								<source>src/unit/java/**</source>-->
-<!--							</sources>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
-
-<!--			<plugin>-->
-<!--				<groupId>org.apache.maven.plugins</groupId>-->
-<!--				<artifactId>maven-surefire-plugin</artifactId> &lt;!&ndash; surefire plugin version managed by Spring Boot &ndash;&gt;-->
-<!--				<configuration>-->
-<!--					<skipTests>false</skipTests>-->
-<!--				</configuration>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>unit-tests</id>-->
-<!--						<phase>test</phase>-->
-<!--						<goals>-->
-<!--							<goal>test</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<skipTests>false</skipTests>-->
-<!--							<includes>-->
-<!--								<include>*</include>-->
-<!--							</includes>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--					<execution>-->
-<!--						<id>integration-tests</id>-->
-<!--						<phase>integration-test</phase>-->
-<!--						<goals>-->
-<!--							<goal>test</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<skipTests>false</skipTests>-->
-<!--							<includes>-->
-<!--								<include>**/*IT.*</include>-->
-<!--								<include>**/*Test.*</include>-->
-<!--							</includes>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
-
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<properties>
+						<configurationParameters>
+							cucumber.plugin=pretty,html:target/site/cucumber-pretty.html
+							cucumber.publish.quiet=true
+							cucumber.publish.enabled=false
+							cucumber.junit-platform.naming-strategy=long
+						</configurationParameters>
+					</properties>
+				</configuration>
+			</plugin>
 
 		</plugins>
 	</build>

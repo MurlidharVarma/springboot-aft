@@ -7,7 +7,7 @@ import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OrderStepDefinition {
+public class OrderStepDefinitionIT {
 
     @Given("^User places an order$")
     public void userPlacesAnOrder(){
