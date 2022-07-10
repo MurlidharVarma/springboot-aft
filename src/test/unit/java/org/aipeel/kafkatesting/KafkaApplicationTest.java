@@ -42,15 +42,6 @@ public class KafkaApplicationTest {
                                                                     .port(8021)
                                                                     .usingFilesUnderDirectory("src/test/unit/resources"));
 
-    /** *
-     * Dynamically override spring application properties value
-     * @param registry
-     */
-    @DynamicPropertySource
-    private static void setDynamicProperties(DynamicPropertyRegistry registry){
-        registry.add("product.host", () ->"http://127.0.0.1:8021");
-    }
-
     @Autowired
     TestRestTemplate restTemplate;
 
@@ -67,11 +58,19 @@ public class KafkaApplicationTest {
 
     Producer<String, String> producer;
 
+    /* Dynamically override spring application properties value */
+    @DynamicPropertySource
+    private static void setDynamicProperties(DynamicPropertyRegistry registry){
+        registry.add("product.host", () ->"http://127.0.0.1:8021");
+    }
+
     @BeforeAll
     private void setup() throws Exception {
+        // Setup for Kafka Producer / Consumer from EmbeddedKafka
         consumer = consumerFactory.createConsumer();
         producer = producerFactory.createProducer();
 
+        // Setup WireMock for API calls
         embeddedKafkaBroker.consumeFromAllEmbeddedTopics(consumer);
         configureFor("127.0.0.1", 8021);
         productServer.start();
@@ -79,8 +78,11 @@ public class KafkaApplicationTest {
 
     @AfterAll
     private void tearDown(){
+        // Stop Kafka Producer / Consumer from EmbeddedKafka
         consumer.close();
         producer.close();
+
+        // Stop WireMock for API calls
         productServer.stop();
     }
 
