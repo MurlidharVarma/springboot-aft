@@ -4,7 +4,10 @@ kafka:
     order: order
     payment: payment
 
-debug: true
+product:
+  host: "https://dummyjson.com"
+  url:
+    inquiry: "/products/search?q="
 
 spring:
   main:
